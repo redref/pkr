@@ -182,9 +182,6 @@ class ComposePkr(Pkr):
             [s for s in services if req_build(s)], tag, verbose, logfile)
 
     def start(self, services=None, yes=False):
-        self._call_compose('up', '-d', *(services or ()))
-
-    def cmd_up(self, services=None, verbose=False, build_log=None):
         """Start PCLM in a the docker environement.
 
         Use parameters stored in meta.yml to generate the
@@ -195,22 +192,7 @@ class ComposePkr(Pkr):
         containers that need to communicate with bare metal machines on
         the given network.
         """
-
-        # Re-populating the context...
-        self.kard.make()
-
-        eff_modules = self._resolve_services(services)
-
-        self.build_images(eff_modules, verbose=verbose, logfile=build_log)
-
-        self.start(services)
-
-        # Do a nap while the containers are launching before calling
-        # post_compose
-        time.sleep(5)
-
-        # Call post run handlers on extensions
-        self.kard.extensions.post_up(eff_modules)
+        self._call_compose('up', '-d', *(services or ()))
 
     def stop(self, services=None):
         """Stop the containers"""

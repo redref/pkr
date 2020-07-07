@@ -358,6 +358,23 @@ class Pkr(object):
                     except BaseException as exc:
                         write(exc.message)
 
+    def cmd_up(self, services=None, verbose=False, build_log=None):
+        # Re-populating the context...
+        self.kard.make()
+
+        eff_modules = self._resolve_services(services)
+
+        self.build_images(eff_modules, verbose=verbose, logfile=build_log)
+
+        self.start(services)
+
+        # Do a nap while the containers are launching before calling
+        # post_compose
+        time.sleep(5)
+
+        # Call post run handlers on extensions
+        self.kard.extensions.post_up(eff_modules)
+
 
 class LogOutput(object):
 
