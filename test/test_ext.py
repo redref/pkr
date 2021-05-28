@@ -1,7 +1,6 @@
 from collections import namedtuple
 
 from pkr.kard import Kard
-from pkr.cli.parser import _create_kard
 from .utils import pkrTestCase
 
 
@@ -22,7 +21,7 @@ class TestExt(pkrTestCase):
 
             res = []
             for i in range(3):
-                kard = _create_kard(args)
+                kard = Kard.create(args)
                 res.append((kard.meta["features"], kard.extensions.extensions))
                 self.assertEqual(repr(res[-1]), repr(res[0]))
                 f.seek(0)
@@ -38,7 +37,7 @@ class TestExt(pkrTestCase):
             extra={},
             meta=f,
         )
-        kard = _create_kard(args)
+        kard = Kard.create(args)
         self.assertIn("ext_mock", kard.extensions.extensions)
         self.assertIn({"test": "Ok"}, kard.extensions.get_context_template_data())
 
@@ -52,6 +51,6 @@ class TestExt(pkrTestCase):
             extra={},
             meta=f,
         )
-        kard = _create_kard(args)
+        kard = Kard.create(args)
         self.assertIn("auto-volume", kard.extensions.extensions)
         self.assertIn("use_volume", kard.extensions.get_context_template_data()[0])

@@ -3,3 +3,6 @@ default_features:
 - g
 - h
 - g
+
+default_meta:
+  a: c
