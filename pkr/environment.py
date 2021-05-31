@@ -76,18 +76,13 @@ class Environment(object):
         ret = default.copy()
         merge(extra, ret)
 
-        required_values = (
-            ensure_definition_matches(
-                definition=self.env.get("required_meta", []), defaults=ret, data=extra
-            )
-            or {}
+        required_values = ensure_definition_matches(
+            definition=self.env.get("required_meta", []), defaults=ret, data=extra
         )
 
-        merge(required_values, ret)
-
         # Feature
-        ret["features"] = self.env.get("default_features", [])
-        return ret
+        required_values["features"] = self.env.get("default_features", [])
+        return required_values
 
     @property
     def default_path(self):

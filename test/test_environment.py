@@ -26,6 +26,7 @@ class TestEnvironment(unittest.TestCase):
         expected_env = {
             "containers": {"backend": {"dockerfile": "backend.dockerfile"}},
             "default_features": ["auto-volume"],
+            "default_meta": {"from": "env"},
             "driver": {
                 "docker_compose": {"compose_file": "templates/docker-compose.yml.template"}
             },
@@ -42,6 +43,7 @@ class TestEnvironment(unittest.TestCase):
         expected_env = {
             "containers": {"backend": {"dockerfile": "backend.dockerfile"}},
             "default_features": ["auto-volume"],
+            "default_meta": {"from": "import"},
             "driver": {
                 "docker_compose": {"compose_file": "templates/docker-compose.yml.template"}
             },
@@ -57,6 +59,7 @@ class TestEnvironment(unittest.TestCase):
         expected_env = {
             "containers": {"backend": {"dockerfile": "backend.dockerfile"}},
             "default_features": ["auto-volume"],
+            "default_meta": {"from": "import"},
             "driver": {
                 "docker_compose": {"compose_file": "templates/docker-compose.yml.template"}
             },

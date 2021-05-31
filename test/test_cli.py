@@ -151,7 +151,6 @@ class TestCLI(pkrTestCase):
         self.assertTrue(meta_file.exists())
 
         expected_meta = {
-            "a": "b",
             "driver": {"name": "compose"},
             "env": "dev",
             "features": ["h", "g", "f", "e"],
@@ -188,7 +187,6 @@ class TestCLI(pkrTestCase):
         self.assertTrue(meta_file.exists())
 
         expected_meta = {
-            "a": "b",
             "driver": {"name": "compose"},
             "env": "dev",
             "features": ["h", "g", "f", "e", "b", "a", "d", "c"],
