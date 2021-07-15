@@ -58,6 +58,7 @@ class BuildxDriver(DockerDriver):
 
         # Get values from meta if defined
         self.buildkit_env.update(kard.meta.get("buildx", {}).get("buildkit_env", {}))
+        self.buildkit_config = kard.meta.get("buildx", {}).get("buildkit_config")
         self.builder_name = kard.meta.get("buildx", {}).get("builder_name", BUILDX_BUILDER_NAME)
 
         # Force cache_registry to be a sub-repo (saved in metafile)
@@ -99,7 +100,12 @@ class BuildxDriver(DockerDriver):
                 else:
                     break
         else:
-            docker.buildx.create(name=self.builder_name, driver_options=self.buildkit_env)
+            config_file = None
+            if self.buildkit_config is not None:
+                config_file = self.kard.path / "buildx_buildkit_config.toml"
+                with config_file.open("w+") as f:
+                    f.write(self.buildkit_config.replace("\\n","\n"))
+            docker.buildx.create(name=self.builder_name, driver_options=self.buildkit_env, config=config_file)
             write(f"Start buildx builder {self.builder_name}")
             with open("/dev/null", "a") as devnull:
                 os.dup2(sys.stdout.fileno(), 3)
@@ -219,8 +225,12 @@ class BuildxDriver(DockerDriver):
                     "load": True,  # load to docker repository
                     "push": False,  # push to registry
                     "tags": image_name,
+                    "cache_to": self.buildx_options["cache_to"].update({
+                        "ref": "{}/{}:{}".format(self.buildx_options["cache_to"]["ref"], service, tag)
+                    }) # Make a unique tag
                 }
             )
+            print(self.buildx_options)
 
             # Handle args
             if nocache and "cache_from" in self.buildx_options:
